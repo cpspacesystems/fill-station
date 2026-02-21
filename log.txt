@@ -1,0 +1,103 @@
+Processing teensy41 (platform: teensy; board: teensy41; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/teensy/teensy41.html
+PLATFORM: Teensy (5.0.0) > Teensy 4.1
+HARDWARE: IMXRT1062 600MHz, 512KB RAM, 7.75MB Flash
+DEBUG: Current (jlink) External (jlink)
+PACKAGES: 
+ - framework-arduinoteensy @ 1.159.0 (1.59) 
+ - tool-teensy @ 1.159.0 (1.59) 
+ - toolchain-gccarmnoneeabi-teensy @ 1.110301.0 (11.3.1)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ deep+, Compatibility ~ soft
+Run command: cmake /home/alh/fill-station/lib/zenoh-pico ['-DFRAG_MAX_SIZE=4096', '-DBATCH_UNICAST_SIZE=2048', '-DBATCH_MULTICAST_SIZE=2048']
+-- Setting C11 as the C Standard
+Compilers in use: GNU, 
+-- Building with feature config:
+* UNSTABLE_API: 0
+* MULTI-THREAD: 1
+* PUBLICATION: 1
+* ADVANCED PUBLICATION: 0
+* ADVANCED SUBSCRIPTION: 0
+* SUBSCRIPTION: 1
+* QUERY: 1
+* QUERYABLE: 1
+* LIVELINESS: 1
+* INTEREST: 1
+* AUTO_RECONNECT: 1
+* MATCHING: 1
+* RAWETH: 0
+-- Building in RELEASE mode
+-- Build shared library: ON
+-- Zenoh Level Log: 
+-- Fragmented message max size: 4096
+-- Unicast batch max size: 2048
+-- Multicast batch max size: 2048
+-- Build for Zephyr RTOS: OFF
+-- Build for FreeRTOS-Plus-TCP: OFF
+-- Build for FreeRTOS + LWIP: OFF
+-- Build for Raspberry Pi Pico: OFF
+-- Configuring for Linux
+-- Produce Debian and RPM packages: OFF
+-- Build examples: ON
+-- Build tools: OFF
+-- Build tests: ON
+-- Build integration: OFF
+-- AddressSanitizer: OFF
+-- zenoh-pico examples
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/alh/fill-station/lib/zenoh-pico/build
+Found 96 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- freertos
+|-- Ethernet @ 2.0.0
+|-- SPI @ 1.0
+|-- zenoh-pico @ 1.7.2.
+Building in release mode
+Compiling .pio/build/teensy41/src/main.cpp.o
+Compiling .pio/build/teensy41/liba52/ADC/ADC.cpp.o
+Compiling .pio/build/teensy41/liba52/ADC/ADC_Module.cpp.o
+Compiling .pio/build/teensy41/liba52/ADC/AnalogBufferDMA.cpp.o
+In file included from lib/zenoh-pico/include/zenoh-pico/system/common/platform.h:48,
+                 from lib/zenoh-pico/include/zenoh-pico/system/platform.h:21,
+                 from lib/zenoh-pico/include/zenoh-pico/collections/refcount.h:21,
+                 from lib/zenoh-pico/include/zenoh-pico/collections/arc_slice.h:24,
+                 from lib/zenoh-pico/include/zenoh-pico/collections/bytes.h:22,
+                 from lib/zenoh-pico/include/zenoh-pico/api/types.h:19,
+                 from lib/zenoh-pico/include/zenoh-pico/api/liveliness.h:21,
+                 from lib/zenoh-pico/include/zenoh-pico/api/advanced_publisher.h:20,
+                 from lib/zenoh-pico/include/zenoh-pico.h:26,
+                 from src/main.cpp:6:
+lib/zenoh-pico/include/zenoh-pico/system/platform/freertos/freertos_plus_tcp.h:19:10: fatal error: FreeRTOS.h: No such file or directory
+
+******************************************************************
+* Looking for FreeRTOS.h dependency? Check our library registry!
+*
+* CLI  > platformio lib search "header:FreeRTOS.h"
+* Web  > https://registry.platformio.org/search?q=header:FreeRTOS.h
+*
+******************************************************************
+
+   19 | #include "FreeRTOS.h"
+      |          ^~~~~~~~~~~~
+compilation terminated.
+Compiling .pio/build/teensy41/lib233/freertos/FreeRTOS-Plus/Demo/AWS/Device_Defender_Windows_Simulator/Device_Defender_Demo/DemoTasks/DefenderDemoExample.c.o
+*** [.pio/build/teensy41/src/main.cpp.o] Error 1
+lib/freertos/FreeRTOS-Plus/Demo/AWS/Device_Defender_Windows_Simulator/Device_Defender_Demo/DemoTasks/DefenderDemoExample.c:62:10: fatal error: FreeRTOS.h: No such file or directory
+
+******************************************************************
+* Looking for FreeRTOS.h dependency? Check our library registry!
+*
+* CLI  > platformio lib search "header:FreeRTOS.h"
+* Web  > https://registry.platformio.org/search?q=header:FreeRTOS.h
+*
+******************************************************************
+
+   62 | #include "FreeRTOS.h"
+      |          ^~~~~~~~~~~~
+compilation terminated.
+*** [.pio/build/teensy41/lib233/freertos/FreeRTOS-Plus/Demo/AWS/Device_Defender_Windows_Simulator/Device_Defender_Demo/DemoTasks/DefenderDemoExample.c.o] Error 1
+========================= [FAILED] Took 25.06 seconds =========================

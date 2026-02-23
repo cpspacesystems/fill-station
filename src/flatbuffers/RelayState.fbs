@@ -1,0 +1,5 @@
+namespace flatbuffers;
+
+enum RelayState : ubyte {
+    Open, Closed
+}

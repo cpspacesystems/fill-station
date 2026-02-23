@@ -1,0 +1,13 @@
+include "RelayState.fbs";
+
+namespace flatbuffers;
+
+table FillStationStatus {
+    solenoid_1: RelayState;
+    solenoid_2: RelayState;
+    phenumatic_valve_1: RelayState;
+    phenumatic_valve_2: RelayState;
+    pressure_transducer_reading: double;
+}
+
+root_type FillStationStatus;

@@ -5,7 +5,8 @@
 
 namespace FillStationConfig
 {
-    constexpr char MQTT_CTRL_SUBSCRIBE_TOPIC[] ="/fill-station/control";
+    constexpr char MQTT_CTRL_SUBSCRIBE_TOPIC[] = "/fill-station/control";
+    constexpr char MQTT_STATE_PUBLISH_TOPIC[] = "/fill-station/state";
 
     namespace MQTTConfig {
         constexpr char FILL_STATION_HOSTNAME[] = "fill_station";
@@ -46,5 +47,8 @@ namespace FillStationConfig
     constexpr uint8_t PRESSURE_TRANSDUCER_PIN = PIN_A4; // 18
     constexpr uint8_t PRESSURE_TRANSDUCER_MODE = INPUT;
 
+    constexpr uint32_t CPU_TYPICAL_CLOCK = 600000000; // Hz
+    constexpr float CPU_THERMAL_THROTTLE_THRESHHOLD = 85; // Celsius 
+    constexpr uint32_t CPU_THERMAL_THROTTLE_CLOCK = 300000000;// Hz
 } // namespace FillStationConfig
 

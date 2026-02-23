@@ -13,8 +13,8 @@ struct Lambda {
    /// @brief Create a Lambda with function ptr and context set to nullptr
    Lambda() = default;
    /// @brief Create a Lambda
-   /// @param context [lifetime ref] the context/this struct void ptr
-   /// @param callback [lifetime ref] the lambda body function ptr
+   /// @param context [lifetime object] the context/this struct void ptr
+   /// @param callback [lifetime object] the lambda body function ptr
    Lambda(void* context, Signature callback) : context(context), callback(callback) {};
    Lambda(Signature callback) : callback(callback) {};
    
@@ -26,7 +26,7 @@ struct Lambda {
    };
 
    /// @brief check if this Lambda is callable
-   explicit operator bool() const {
+   explicit operator bool() const noexcept {
       return this->callback == nullptr;
    };
 };

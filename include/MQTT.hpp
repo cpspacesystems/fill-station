@@ -140,6 +140,7 @@ public:
         m_client.loop();
     }
 private:
+    // MQTT message received callback
     static void on_msg_receive(void* this_ref, char* topic, uint8_t* payload, size_t length) noexcept {
         Client* self = static_cast<Client*>(this_ref);
         for (int i = 0; i < self->m_sub_map_size; i++) {

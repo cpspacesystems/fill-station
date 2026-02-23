@@ -17,19 +17,148 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 
 namespace flatbuffers {
 
+struct SystemMessage;
+struct SystemMessageBuilder;
+
 struct FillStationStatus;
 struct FillStationStatusBuilder;
+
+enum class SystemMessageType : uint8_t {
+  WarnCTRLFramePossiblySkipped = 0,
+  WarnProcessorThermalThrottle = 1,
+  GenericMessage = 2,
+  CriticalMessage = 3,
+  MIN = WarnCTRLFramePossiblySkipped,
+  MAX = CriticalMessage
+};
+
+inline const SystemMessageType (&EnumValuesSystemMessageType())[4] {
+  static const SystemMessageType values[] = {
+    SystemMessageType::WarnCTRLFramePossiblySkipped,
+    SystemMessageType::WarnProcessorThermalThrottle,
+    SystemMessageType::GenericMessage,
+    SystemMessageType::CriticalMessage
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesSystemMessageType() {
+  static const char * const names[5] = {
+    "WarnCTRLFramePossiblySkipped",
+    "WarnProcessorThermalThrottle",
+    "GenericMessage",
+    "CriticalMessage",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameSystemMessageType(SystemMessageType e) {
+  if (::flatbuffers::IsOutRange(e, SystemMessageType::WarnCTRLFramePossiblySkipped, SystemMessageType::CriticalMessage)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesSystemMessageType()[index];
+}
+
+struct SystemMessage FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef SystemMessageBuilder Builder;
+  struct Traits;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_TYPE = 4,
+    VT_MESSAGE = 6
+  };
+  flatbuffers::SystemMessageType type() const {
+    return static_cast<flatbuffers::SystemMessageType>(GetField<uint8_t>(VT_TYPE, 0));
+  }
+  const ::flatbuffers::String *message() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MESSAGE);
+  }
+  template<size_t Index>
+  auto get_field() const {
+         if constexpr (Index == 0) return type();
+    else if constexpr (Index == 1) return message();
+    else static_assert(Index != -1, "Invalid Field Index");
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_TYPE, 1) &&
+           VerifyOffset(verifier, VT_MESSAGE) &&
+           verifier.VerifyString(message()) &&
+           verifier.EndTable();
+  }
+};
+
+struct SystemMessageBuilder {
+  typedef SystemMessage Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_type(flatbuffers::SystemMessageType type) {
+    fbb_.AddElement<uint8_t>(SystemMessage::VT_TYPE, static_cast<uint8_t>(type), 0);
+  }
+  void add_message(::flatbuffers::Offset<::flatbuffers::String> message) {
+    fbb_.AddOffset(SystemMessage::VT_MESSAGE, message);
+  }
+  explicit SystemMessageBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<SystemMessage> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<SystemMessage>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<SystemMessage> CreateSystemMessage(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::SystemMessageType type = flatbuffers::SystemMessageType::WarnCTRLFramePossiblySkipped,
+    ::flatbuffers::Offset<::flatbuffers::String> message = 0) {
+  SystemMessageBuilder builder_(_fbb);
+  builder_.add_message(message);
+  builder_.add_type(type);
+  return builder_.Finish();
+}
+
+struct SystemMessage::Traits {
+  using type = SystemMessage;
+  static auto constexpr Create = CreateSystemMessage;
+  static constexpr auto name = "SystemMessage";
+  static constexpr auto fully_qualified_name = "flatbuffers.SystemMessage";
+  static constexpr size_t fields_number = 2;
+  static constexpr std::array<const char *, fields_number> field_names = {
+    "type",
+    "message"
+  };
+  template<size_t Index>
+  using FieldType = decltype(std::declval<type>().get_field<Index>());
+};
+
+inline ::flatbuffers::Offset<SystemMessage> CreateSystemMessageDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::SystemMessageType type = flatbuffers::SystemMessageType::WarnCTRLFramePossiblySkipped,
+    const char *message = nullptr) {
+  auto message__ = message ? _fbb.CreateString(message) : 0;
+  return flatbuffers::CreateSystemMessage(
+      _fbb,
+      type,
+      message__);
+}
 
 struct FillStationStatus FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef FillStationStatusBuilder Builder;
   struct Traits;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_SOLENOID_1 = 4,
-    VT_SOLENOID_2 = 6,
-    VT_PHENUMATIC_VALVE_1 = 8,
-    VT_PHENUMATIC_VALVE_2 = 10,
-    VT_PRESSURE_TRANSDUCER_READING = 12
+    VT_FRAME_NUMBER = 4,
+    VT_SOLENOID_1 = 6,
+    VT_SOLENOID_2 = 8,
+    VT_PHENUMATIC_VALVE_1 = 10,
+    VT_PHENUMATIC_VALVE_2 = 12,
+    VT_PRESSURE_TRANSDUCER_READING = 14,
+    VT_MESSAGES = 16
   };
+  uint64_t frame_number() const {
+    return GetField<uint64_t>(VT_FRAME_NUMBER, 0);
+  }
   flatbuffers::RelayState solenoid_1() const {
     return static_cast<flatbuffers::RelayState>(GetField<uint8_t>(VT_SOLENOID_1, 0));
   }
@@ -45,23 +174,32 @@ struct FillStationStatus FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
   double pressure_transducer_reading() const {
     return GetField<double>(VT_PRESSURE_TRANSDUCER_READING, 0.0);
   }
+  const ::flatbuffers::Vector<::flatbuffers::Offset<flatbuffers::SystemMessage>> *messages() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<flatbuffers::SystemMessage>> *>(VT_MESSAGES);
+  }
   template<size_t Index>
   auto get_field() const {
-         if constexpr (Index == 0) return solenoid_1();
-    else if constexpr (Index == 1) return solenoid_2();
-    else if constexpr (Index == 2) return phenumatic_valve_1();
-    else if constexpr (Index == 3) return phenumatic_valve_2();
-    else if constexpr (Index == 4) return pressure_transducer_reading();
+         if constexpr (Index == 0) return frame_number();
+    else if constexpr (Index == 1) return solenoid_1();
+    else if constexpr (Index == 2) return solenoid_2();
+    else if constexpr (Index == 3) return phenumatic_valve_1();
+    else if constexpr (Index == 4) return phenumatic_valve_2();
+    else if constexpr (Index == 5) return pressure_transducer_reading();
+    else if constexpr (Index == 6) return messages();
     else static_assert(Index != -1, "Invalid Field Index");
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
+           VerifyField<uint64_t>(verifier, VT_FRAME_NUMBER, 8) &&
            VerifyField<uint8_t>(verifier, VT_SOLENOID_1, 1) &&
            VerifyField<uint8_t>(verifier, VT_SOLENOID_2, 1) &&
            VerifyField<uint8_t>(verifier, VT_PHENUMATIC_VALVE_1, 1) &&
            VerifyField<uint8_t>(verifier, VT_PHENUMATIC_VALVE_2, 1) &&
            VerifyField<double>(verifier, VT_PRESSURE_TRANSDUCER_READING, 8) &&
+           VerifyOffset(verifier, VT_MESSAGES) &&
+           verifier.VerifyVector(messages()) &&
+           verifier.VerifyVectorOfTables(messages()) &&
            verifier.EndTable();
   }
 };
@@ -70,6 +208,9 @@ struct FillStationStatusBuilder {
   typedef FillStationStatus Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
+  void add_frame_number(uint64_t frame_number) {
+    fbb_.AddElement<uint64_t>(FillStationStatus::VT_FRAME_NUMBER, frame_number, 0);
+  }
   void add_solenoid_1(flatbuffers::RelayState solenoid_1) {
     fbb_.AddElement<uint8_t>(FillStationStatus::VT_SOLENOID_1, static_cast<uint8_t>(solenoid_1), 0);
   }
@@ -85,6 +226,9 @@ struct FillStationStatusBuilder {
   void add_pressure_transducer_reading(double pressure_transducer_reading) {
     fbb_.AddElement<double>(FillStationStatus::VT_PRESSURE_TRANSDUCER_READING, pressure_transducer_reading, 0.0);
   }
+  void add_messages(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<flatbuffers::SystemMessage>>> messages) {
+    fbb_.AddOffset(FillStationStatus::VT_MESSAGES, messages);
+  }
   explicit FillStationStatusBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -98,13 +242,17 @@ struct FillStationStatusBuilder {
 
 inline ::flatbuffers::Offset<FillStationStatus> CreateFillStationStatus(
     ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint64_t frame_number = 0,
     flatbuffers::RelayState solenoid_1 = flatbuffers::RelayState::Open,
     flatbuffers::RelayState solenoid_2 = flatbuffers::RelayState::Open,
     flatbuffers::RelayState phenumatic_valve_1 = flatbuffers::RelayState::Open,
     flatbuffers::RelayState phenumatic_valve_2 = flatbuffers::RelayState::Open,
-    double pressure_transducer_reading = 0.0) {
+    double pressure_transducer_reading = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<flatbuffers::SystemMessage>>> messages = 0) {
   FillStationStatusBuilder builder_(_fbb);
   builder_.add_pressure_transducer_reading(pressure_transducer_reading);
+  builder_.add_frame_number(frame_number);
+  builder_.add_messages(messages);
   builder_.add_phenumatic_valve_2(phenumatic_valve_2);
   builder_.add_phenumatic_valve_1(phenumatic_valve_1);
   builder_.add_solenoid_2(solenoid_2);
@@ -117,17 +265,40 @@ struct FillStationStatus::Traits {
   static auto constexpr Create = CreateFillStationStatus;
   static constexpr auto name = "FillStationStatus";
   static constexpr auto fully_qualified_name = "flatbuffers.FillStationStatus";
-  static constexpr size_t fields_number = 5;
+  static constexpr size_t fields_number = 7;
   static constexpr std::array<const char *, fields_number> field_names = {
+    "frame_number",
     "solenoid_1",
     "solenoid_2",
     "phenumatic_valve_1",
     "phenumatic_valve_2",
-    "pressure_transducer_reading"
+    "pressure_transducer_reading",
+    "messages"
   };
   template<size_t Index>
   using FieldType = decltype(std::declval<type>().get_field<Index>());
 };
+
+inline ::flatbuffers::Offset<FillStationStatus> CreateFillStationStatusDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint64_t frame_number = 0,
+    flatbuffers::RelayState solenoid_1 = flatbuffers::RelayState::Open,
+    flatbuffers::RelayState solenoid_2 = flatbuffers::RelayState::Open,
+    flatbuffers::RelayState phenumatic_valve_1 = flatbuffers::RelayState::Open,
+    flatbuffers::RelayState phenumatic_valve_2 = flatbuffers::RelayState::Open,
+    double pressure_transducer_reading = 0.0,
+    const std::vector<::flatbuffers::Offset<flatbuffers::SystemMessage>> *messages = nullptr) {
+  auto messages__ = messages ? _fbb.CreateVector<::flatbuffers::Offset<flatbuffers::SystemMessage>>(*messages) : 0;
+  return flatbuffers::CreateFillStationStatus(
+      _fbb,
+      frame_number,
+      solenoid_1,
+      solenoid_2,
+      phenumatic_valve_1,
+      phenumatic_valve_2,
+      pressure_transducer_reading,
+      messages__);
+}
 
 inline const flatbuffers::FillStationStatus *GetFillStationStatus(const void *buf) {
   return ::flatbuffers::GetRoot<flatbuffers::FillStationStatus>(buf);

@@ -24,11 +24,15 @@ struct FillStationControl FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   typedef FillStationControlBuilder Builder;
   struct Traits;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_SOLENOID_1 = 4,
-    VT_SOLENOID_2 = 6,
-    VT_PHENUMATIC_VALVE_1 = 8,
-    VT_PHENUMATIC_VALVE_2 = 10
+    VT_FRAME_NUMBER = 4,
+    VT_SOLENOID_1 = 6,
+    VT_SOLENOID_2 = 8,
+    VT_PHENUMATIC_VALVE_1 = 10,
+    VT_PHENUMATIC_VALVE_2 = 12
   };
+  uint64_t frame_number() const {
+    return GetField<uint64_t>(VT_FRAME_NUMBER, 0);
+  }
   flatbuffers::RelayState solenoid_1() const {
     return static_cast<flatbuffers::RelayState>(GetField<uint8_t>(VT_SOLENOID_1, 0));
   }
@@ -43,15 +47,17 @@ struct FillStationControl FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   }
   template<size_t Index>
   auto get_field() const {
-         if constexpr (Index == 0) return solenoid_1();
-    else if constexpr (Index == 1) return solenoid_2();
-    else if constexpr (Index == 2) return phenumatic_valve_1();
-    else if constexpr (Index == 3) return phenumatic_valve_2();
+         if constexpr (Index == 0) return frame_number();
+    else if constexpr (Index == 1) return solenoid_1();
+    else if constexpr (Index == 2) return solenoid_2();
+    else if constexpr (Index == 3) return phenumatic_valve_1();
+    else if constexpr (Index == 4) return phenumatic_valve_2();
     else static_assert(Index != -1, "Invalid Field Index");
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
+           VerifyField<uint64_t>(verifier, VT_FRAME_NUMBER, 8) &&
            VerifyField<uint8_t>(verifier, VT_SOLENOID_1, 1) &&
            VerifyField<uint8_t>(verifier, VT_SOLENOID_2, 1) &&
            VerifyField<uint8_t>(verifier, VT_PHENUMATIC_VALVE_1, 1) &&
@@ -64,6 +70,9 @@ struct FillStationControlBuilder {
   typedef FillStationControl Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
+  void add_frame_number(uint64_t frame_number) {
+    fbb_.AddElement<uint64_t>(FillStationControl::VT_FRAME_NUMBER, frame_number, 0);
+  }
   void add_solenoid_1(flatbuffers::RelayState solenoid_1) {
     fbb_.AddElement<uint8_t>(FillStationControl::VT_SOLENOID_1, static_cast<uint8_t>(solenoid_1), 0);
   }
@@ -89,11 +98,13 @@ struct FillStationControlBuilder {
 
 inline ::flatbuffers::Offset<FillStationControl> CreateFillStationControl(
     ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint64_t frame_number = 0,
     flatbuffers::RelayState solenoid_1 = flatbuffers::RelayState::Open,
     flatbuffers::RelayState solenoid_2 = flatbuffers::RelayState::Open,
     flatbuffers::RelayState phenumatic_valve_1 = flatbuffers::RelayState::Open,
     flatbuffers::RelayState phenumatic_valve_2 = flatbuffers::RelayState::Open) {
   FillStationControlBuilder builder_(_fbb);
+  builder_.add_frame_number(frame_number);
   builder_.add_phenumatic_valve_2(phenumatic_valve_2);
   builder_.add_phenumatic_valve_1(phenumatic_valve_1);
   builder_.add_solenoid_2(solenoid_2);
@@ -106,8 +117,9 @@ struct FillStationControl::Traits {
   static auto constexpr Create = CreateFillStationControl;
   static constexpr auto name = "FillStationControl";
   static constexpr auto fully_qualified_name = "flatbuffers.FillStationControl";
-  static constexpr size_t fields_number = 4;
+  static constexpr size_t fields_number = 5;
   static constexpr std::array<const char *, fields_number> field_names = {
+    "frame_number",
     "solenoid_1",
     "solenoid_2",
     "phenumatic_valve_1",

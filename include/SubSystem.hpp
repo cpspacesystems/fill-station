@@ -18,7 +18,7 @@ public:
 
     /// @brief Runs this subsystem for one cycle
     /// @return status of weather or not run() succeeds
-    virtual FunctionStatus run() noexcept {
+    virtual FunctionStatus periodic() noexcept {
         // default do nothing
         return FunctionStatus::Ok;
     };

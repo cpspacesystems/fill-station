@@ -79,7 +79,8 @@ void check_temp() {
 // put your setup code here, to run once:
 void setup() {
     // set processor clock speed
-    currentClock = set_arm_clock(FillStationConfig::CPU_TYPICAL_CLOCK);
+    set_arm_clock(FillStationConfig::CPU_TYPICAL_CLOCK);
+    currentClock = FillStationConfig::CPU_TYPICAL_CLOCK;
 
     // init termperature monitoring
     tempmon_init();
@@ -166,9 +167,11 @@ void loop() {
             flatbuffers::SystemMessageType::WarnProcessorThermalThrottle, 
             "WARN: Fill Station Teensy CPU throttling due to thermal. Temperature critical at %f °C!"
         }));
-        currentClock = set_arm_clock(FillStationConfig::CPU_THERMAL_THROTTLE_CLOCK);
+        set_arm_clock(FillStationConfig::CPU_THERMAL_THROTTLE_CLOCK);
+        currentClock = FillStationConfig::CPU_THERMAL_THROTTLE_CLOCK;
     } else if (currentClock != FillStationConfig::CPU_TYPICAL_CLOCK) {
-        currentClock = set_arm_clock(FillStationConfig::CPU_TYPICAL_CLOCK);
+        set_arm_clock(FillStationConfig::CPU_TYPICAL_CLOCK);
+        currentClock = FillStationConfig::CPU_TYPICAL_CLOCK;
         serialdbg("INFO: Thermal throttle condition ended. Reset.")
     }
     
